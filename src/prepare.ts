@@ -19,9 +19,11 @@ export async function updateVersion(
 }
 
 export default async function prepare(pluginConfig: object, context: IContext) {
-  const { cwd, env, nextRelease } = context;
+  const { cwd, env, nextRelease, logger } = context;
+  logger.debug('prepare', nextRelease.version);
   await updateVersion(cwd, nextRelease.version);
   const version = await getVersion(cwd, env as NodeJS.ProcessEnv);
+  logger.debug('prepare', version);
   if (version !== nextRelease.version) {
     throw new Error(
       `Failed to update version from ${version} to ${nextRelease.version}. ` +
